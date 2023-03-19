@@ -1,0 +1,88 @@
+﻿@page "/ContactoEliminar/{id:int}"
+
+@inject IContactoService ContactoService
+@inject NavigationManager NavigationManager
+
+@if (contacto == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <RadzenTemplateForm Data="contacto">
+        <div class="card">
+            <div class="card-body">
+                <div class="container">
+
+                    <RadzenFieldset Text="Detalle de Contacto">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="">Nombres</label>
+                                <RadzenTextBox class="form-control" @bind-Value="@contacto.Nombre" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="">Apellidos</label>
+                                <RadzenTextBox class="form-control" @bind-Value="@contacto.Apellido" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="">Celular</label>
+                                <RadzenTextBox class="form-control" @bind-Value="@contacto.Celular" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="">Dirección</label>
+                                <RadzenTextArea class="form-control" @bind-Value="@contacto.Dirección" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <RadzenButton Text="Eliminar" ButtonStyle="ButtonStyle.Danger" Click="@(args => Eliminar())" />
+                                <RadzenButton Text="Cancelar" ButtonStyle="ButtonStyle.Secondary" Click="@(args => NavegarInicio())" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                            </div>
+                        </div>
+                    </RadzenFieldset>
+
+                </div>
+            </div>
+        </div>
+    </RadzenTemplateForm>
+}
+
+
+
+
+
+@code {
+
+    public Contacto contacto;
+
+    [Parameter]
+    public int id { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        contacto = await ContactoService.GetDetalles(id);
+    }
+
+    protected async Task Eliminar()
+    {
+        await ContactoService.EliminarContacto(id);
+        NavegarInicio();
+    }
+
+    private void NavegarInicio()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+}
